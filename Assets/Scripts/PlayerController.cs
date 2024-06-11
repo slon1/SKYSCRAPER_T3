@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
+
 {
 	private PlayerModel model;
 	public PlayerView view;
@@ -16,6 +17,15 @@ public class PlayerController : MonoBehaviour
 		model.Direction = view.transform.rotation.eulerAngles;
 	}
 	public Vector3 Position => view.transform.position;
+
+	public int Health => model.Health;
+
+	public float Speed => model.Speed;
+
+	public Vector2 Direction { get => model.Direction; set => model.Direction = value; }
+
+	public bool IsAlive => model.IsAlive;
+
 	public void Destroy() {
 		OnDespawned?.Invoke(this);
 	}
@@ -26,7 +36,7 @@ public class PlayerController : MonoBehaviour
 		
 		view.MoveTowards(target, 10);
 		view.RotateTowards(new Vector3(0, 0, angle));
-		Debug.DrawRay(transform.position, model.Direction, Color.blue, 10);
+		//Debug.DrawRay(transform.position, model.Direction, Color.blue, 1);
 		//model.Direction=direction.
 	
     }
@@ -34,5 +44,13 @@ public class PlayerController : MonoBehaviour
 	public void Fire(LaserController shot) {
 		shot.SetForward(transform.up);
 		
+	}
+
+	public void TakeDamage(int damage) {
+		model.TakeDamage(damage);
+		if (!IsAlive) {
+			OnDespawned?.Invoke(this);
+			print(666);
+		}
 	}
 }

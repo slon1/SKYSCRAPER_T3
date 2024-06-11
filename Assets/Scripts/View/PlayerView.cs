@@ -10,7 +10,7 @@ public class PlayerView : ShipView
 	public override void MoveTowards(Vector3 target, float speed) {		
 		
 		transform.Translate(target * speed * Time.deltaTime, Space.World);
-		Debug.DrawRay(transform.position, transform.up, Color.red, 1);
+		//Debug.DrawRay(transform.position, transform.up, Color.red, 1);
 
 	}
 

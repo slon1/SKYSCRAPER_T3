@@ -32,6 +32,31 @@ public class EnemyController : MonoBehaviour , IDamageable {
 		model.Direction = transform.up;
 		
 	}
+
+	private void CheckCollision() {		
+		var colliders = Physics2D.OverlapCircleAll(transform.position, view.Bounds.extents.y*0.5f);		
+		foreach (Collider2D collider in colliders) {
+			if (!collider.gameObject.Equals(gameObject)) {				
+				IDamageable damageable = collider.GetComponent<IDamageable>();
+				if (damageable != null) { 
+					if (damageable is PlayerController) {
+						print(1);
+					}
+					if (damageable is EnemyController) {
+						print(2);
+					}
+				}
+				
+			}
+		
+			
+			
+			//damageable.TakeDamage(damage);
+			//OnDespawned?.Invoke(this);
+		}
+
+	}
+
 	public void Destroy() {
 		OnDespawned?.Invoke(this);
 	}
@@ -46,7 +71,7 @@ public class EnemyController : MonoBehaviour , IDamageable {
 	    var f = (Mathf.PerlinNoise(transform.localPosition.x*scale, transform.localPosition.y*scale)-0.5f) * ampltude;
 		//float Angle = Mathf.Lerp(minAngle, maxAngle, f);
 		//var r = Vector2.Lerp(Vector2.up, Vector2.down, f);
-
+		CheckCollision();
 		//var target= new Vector2 (0, 0 );
 		view.MoveTowards(target, 1);
 	}
