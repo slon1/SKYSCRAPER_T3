@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 using Zenject;
-
+public enum CollisionType { none, enemy, player}
 public class EnemyController : MonoBehaviour , IDamageable {
     private EnemyModel model;
     public EnemyView view;
@@ -33,28 +33,26 @@ public class EnemyController : MonoBehaviour , IDamageable {
 		
 	}
 
-	private void CheckCollision() {		
-		var colliders = Physics2D.OverlapCircleAll(transform.position, view.Bounds.extents.y*0.5f);		
+	private CollisionType CheckCollision() {
+		
+		var colliders = Physics2D.OverlapCircleAll(transform.position, view.Renderer.bounds.extents.y*0.5f);		
 		foreach (Collider2D collider in colliders) {
 			if (!collider.gameObject.Equals(gameObject)) {				
 				IDamageable damageable = collider.GetComponent<IDamageable>();
 				if (damageable != null) { 
 					if (damageable is PlayerController) {
-						print(1);
+						damageable.TakeDamage(1);
+						return CollisionType.player;
 					}
 					if (damageable is EnemyController) {
-						print(2);
+						return CollisionType.enemy;
 					}
-				}
-				
-			}
-		
-			
-			
+				}				
+			}			
 			//damageable.TakeDamage(damage);
 			//OnDespawned?.Invoke(this);
 		}
-
+		return CollisionType.none;
 	}
 
 	public void Destroy() {
@@ -71,10 +69,49 @@ public class EnemyController : MonoBehaviour , IDamageable {
 	    var f = (Mathf.PerlinNoise(transform.localPosition.x*scale, transform.localPosition.y*scale)-0.5f) * ampltude;
 		//float Angle = Mathf.Lerp(minAngle, maxAngle, f);
 		//var r = Vector2.Lerp(Vector2.up, Vector2.down, f);
-		CheckCollision();
+		
+
+		var direction = (playerRender.bounds.center - view.Renderer.bounds.center).normalized;
+		Vector3 avoidance = CalculateAvoidance();
+		Vector3 desiredDirection = (direction + avoidance).normalized;
+
+		//Debug.DrawRay(view.Renderer.bounds.center, CalculateAvoidance(), Color.red, 1);
+		//Debug.DrawRay(view.Renderer.bounds.center, desiredDirection, Color.blue, 1);
+		
+		
+		switch (CheckCollision()) {
+			case CollisionType.none:
+				
+				view.MoveTowards(desiredDirection, 2);
+				break;
+			case CollisionType.enemy:
+				
+				view.MoveTowards(desiredDirection, 2);
+				break;
+			case CollisionType.player:
+				
+				break;
+		}
+
 		//var target= new Vector2 (0, 0 );
-		view.MoveTowards(target, 1);
+
 	}
 
-	
+	Vector3 CalculateAvoidance() {
+		Vector3 avoidance = Vector3.zero;
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, view.Renderer.bounds.extents.y * 5f);
+
+		foreach (Collider2D collider in colliders) {
+			if (collider.transform != transform) {
+				Vector3 difference = transform.position - collider.transform.position;
+				avoidance += difference.normalized / difference.magnitude;
+			}
+		}
+
+		return Vector3.ClampMagnitude(avoidance, view.Renderer.bounds.extents.y * 5f);
+	}
+	private Renderer playerRender;
+	internal void SetTarget(SpriteRenderer renderer) {
+		this.playerRender= renderer;
+	}
 }

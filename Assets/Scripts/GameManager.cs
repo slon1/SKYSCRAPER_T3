@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       spawner.Spawn(3);
+       spawner.Spawn(13, player);
         
         
     }

@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		model.Direction = view.transform.rotation.eulerAngles;
 	}
 	public Vector3 Position => view.transform.position;
-
+	
+	public SpriteRenderer Renderer =>view.Renderer;
 	public int Health => model.Health;
 
 	public float Speed => model.Speed;
@@ -49,8 +50,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void TakeDamage(int damage) {
 		model.TakeDamage(damage);
 		if (!IsAlive) {
-			OnDespawned?.Invoke(this);
-			print(666);
+			//OnDespawned?.Invoke(this);
+			
 		}
 	}
 }

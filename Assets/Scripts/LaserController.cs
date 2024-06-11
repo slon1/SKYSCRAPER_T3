@@ -31,7 +31,7 @@ public class LaserController : MonoBehaviour {
 		var collider = Physics2D.OverlapPoint(transform.position);
 		if (collider) {
 			IDamageable damageable = collider.GetComponent<IDamageable>();
-			if (damageable!=null) {
+			if (damageable!=null && damageable is EnemyController) {
 				damageable.TakeDamage(damage);
 				OnDespawned?.Invoke(this);
 			}
