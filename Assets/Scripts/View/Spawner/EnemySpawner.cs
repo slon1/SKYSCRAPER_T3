@@ -1,13 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 
 public class EnemySpawner : MonoBehaviour
 {
     private EnemyPool pool;
 	private PlayerController player;
+	public event Action OnWaveEnd;
 
 	private List<EnemyController> items;
 	[Inject]
@@ -33,10 +36,19 @@ public class EnemySpawner : MonoBehaviour
 	private void OnDespawn(EnemyController ship) {
 		ship.OnDespawned -= OnDespawn;
 		items.Remove(ship);
+		if (items.Count == 0) {
+			OnWaveEnd?.Invoke();
+		}
 	}
 
 	private void Update() {
-        items.ForEach(x => x.Update1());
-	}
+
+        for (int i = 0; i < items.Count; i++)
+        {
+			items[i].Update1();
+		}
+
+
+    }
 
 }

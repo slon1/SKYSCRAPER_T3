@@ -88,7 +88,7 @@ public class EnemyController : MonoBehaviour , IDamageable {
 				view.MoveTowards(desiredDirection, 2);
 				break;
 			case CollisionType.player:
-				
+				TakeDamage(1);
 				break;
 		}
 

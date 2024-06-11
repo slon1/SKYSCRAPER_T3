@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public PlayerView view;
 	public event Action<PlayerController> OnDespawned;
 	private const int up = 90;
+	public event Action OnGameOver;
 	// Start is called before the first frame update
 	void Start()
     {
@@ -50,8 +51,13 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void TakeDamage(int damage) {
 		model.TakeDamage(damage);
 		if (!IsAlive) {
+			OnGameOver?.Invoke();
 			//OnDespawned?.Invoke(this);
 			
 		}
+	}
+
+	internal void SetHealth(int hp) {
+		model.SetHealth(hp);
 	}
 }

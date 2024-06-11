@@ -23,12 +23,27 @@ public class GameManager : MonoBehaviour
     void Start()
     {
        spawner.Spawn(13, player);
-        
+        player.SetHealth(2);
+		player.OnGameOver += Player_OnGameOver;
+		spawner.OnWaveEnd += Spawner_OnWaveEnd;
         
     }
 
-    // Update is called once per frame
-    void Update()
+	
+
+	private void OnDestroy() {
+		player.OnGameOver -= Player_OnGameOver;
+		spawner.OnWaveEnd -= Spawner_OnWaveEnd;
+	}
+
+	private void Player_OnGameOver() {
+		
+	}
+	private void Spawner_OnWaveEnd() {
+        spawner.Spawn(10,player);
+	}
+	// Update is called once per frame
+	void Update()
     {
        // if (!input.Idle )
         {
