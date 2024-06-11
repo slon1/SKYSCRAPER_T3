@@ -71,9 +71,8 @@ public class EnemyController : MonoBehaviour , IDamageable {
 		//var r = Vector2.Lerp(Vector2.up, Vector2.down, f);
 		
 
-		var direction = (playerRender.bounds.center - view.Renderer.bounds.center).normalized;
-		Vector3 avoidance = CalculateAvoidance();
-		Vector3 desiredDirection = (direction + avoidance).normalized;
+		var direction = (playerRender.bounds.center - view.Renderer.bounds.center).normalized;		
+		Vector3 desiredDirection = (direction + CalculateAvoidance()).normalized;
 
 		//Debug.DrawRay(view.Renderer.bounds.center, CalculateAvoidance(), Color.red, 1);
 		//Debug.DrawRay(view.Renderer.bounds.center, desiredDirection, Color.blue, 1);
