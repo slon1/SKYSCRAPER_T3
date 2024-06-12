@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 namespace Utils {
 	public abstract class EncryptedFile : IDisposable {
 		protected string filepath;
-		//protected string key;
 		protected object saveLock = new object();
 		protected byte[] key;
 
@@ -15,7 +14,7 @@ namespace Utils {
 			key = MD5.Create().ComputeHash(Encoding.Unicode.GetBytes(encryptionKey));
 			await Load();
 		}
-		
+
 		byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key) {
 			byte[] encrypted;
 			byte[] IV;
@@ -96,14 +95,14 @@ namespace Utils {
 		}
 
 
-		protected async Task WriteAllTextAsync(string path, string text) {			
+		protected async Task WriteAllTextAsync(string path, string text) {
 			var encodedText = EncryptStringToBytes_Aes(text, key);
 			await File.WriteAllBytesAsync(path, encodedText);
 		}
 
 		protected async Task<string> ReadAllTextAsync(string path) {
 			var decodedText = await File.ReadAllBytesAsync(path);
-			return DecryptStringFromBytes_Aes (decodedText, key);
+			return DecryptStringFromBytes_Aes(decodedText, key);
 		}
 
 		protected abstract Task Load();

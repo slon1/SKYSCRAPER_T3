@@ -1,19 +1,16 @@
 
 using System.Collections;
-
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using Utils;
 using Zenject;
-using Zenject.SpaceFighter;
 
 
 public class MenuManager : MonoBehaviour {
 	public enum GameState { Loading, MainMenu, Gameplay, Exit }
 	private GameState currentState;	
 	private UIManager uiManager;
-	EncryptedStorage storage;
-	GameManager gameManager;
+	private EncryptedStorage storage;
+	private GameManager gameManager;
 
 	[Inject]
 	private void Construct(UIManager uiManager, EncryptedStorage storage, GameManager gameManager ) {
@@ -21,7 +18,6 @@ public class MenuManager : MonoBehaviour {
 		this.storage = storage;
 		this.gameManager = gameManager;
 	}
-
 
 	void Start() {
 		ChangeState(GameState.Loading);
@@ -41,13 +37,12 @@ public class MenuManager : MonoBehaviour {
 			case GameState.MainMenu:
 				Load();
 				uiManager.ShowMainMenu();
-				gameManager.Stop();
+				gameManager.StopGame();
 				break;
 			case GameState.Gameplay:
 				uiManager.HideMainMenu();
-				uiManager.SetScore(0);
-				gameManager.Restart();
-				//saveSystem.LoadGame();
+				uiManager.ScoreReset();
+				gameManager.StartGame();				
 				break;
 			case GameState.Exit:
 				Save();
@@ -55,15 +50,12 @@ public class MenuManager : MonoBehaviour {
 				break;
 		}
 	}
-
-
 	
 	public void Save() {
 		int scoreTop= storage.GetInt("mydata");
 		if (int.TryParse(uiManager.GetScore(), out var score)) {
 			scoreTop = Mathf.Max(scoreTop, score);
-		}
-		print("asve " + scoreTop);
+		}		
 		storage.SetInt("mydata", scoreTop);
 	}
 	public async void Load() {
@@ -71,7 +63,6 @@ public class MenuManager : MonoBehaviour {
 		if (int.TryParse(uiManager.GetScore(), out var score)) {
 			uiManager.SetScoreTop(storage.GetInt("mydata"));
 		}
-		print("load " + storage.GetInt("mydata"));
 
 	}	
 
@@ -84,6 +75,7 @@ public class MenuManager : MonoBehaviour {
 		}
 		ChangeState(GameState.MainMenu);
 	}
+
 	private void OnDestroy() {
 		gameManager.OnGameOver -= GameManager_OnGameOver;
 	}

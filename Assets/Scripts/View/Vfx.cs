@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Vfx : MonoBehaviour {
@@ -18,8 +15,8 @@ public class Vfx : MonoBehaviour {
 		animator = null;
 		cancellationTokenSource.Cancel();
 		OnDespawned?.Invoke(this);
-
 	}
+
 	public async void Play() {
 		token = cancellationTokenSource.Token;
 
@@ -33,9 +30,5 @@ public class Vfx : MonoBehaviour {
 		finally {
 			OnDespawned?.Invoke(this);
 		}
-
-
 	}
-
-
 }

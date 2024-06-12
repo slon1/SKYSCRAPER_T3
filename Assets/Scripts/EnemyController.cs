@@ -1,36 +1,28 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
-using Zenject;
 public enum CollisionType { none, enemy, player}
 public class EnemyController : MonoBehaviour , IDamageable {
     private EnemyModel model;
-    public EnemyView view;
-	public event Action<EnemyController> OnDespawned;
-	public Vector2 target;
-	
+	[SerializeField]
+	private EnemyView view;
+	public event Action<EnemyController> OnDespawned;	
 	public int Health => model.Health;
 	public Vector3 Position=>transform.position;
 	public float Speed => model.Speed;
-
 	public Vector2 Direction { get => model.Direction; set => model.Direction = value; }
-
 	public bool IsAlive => model.IsAlive;
-
+	private Renderer playerRender;
+	private float radius = 5f;
 	public void TakeDamage(int damage) {
 		model.TakeDamage(damage);
 		if (!IsAlive) {
 			OnDespawned?.Invoke(this);
 		}
 	}
-
-
-	private void Start() {
-		model = new EnemyModel();
-		model.Direction = transform.up;
-		
+	
+	public void Init(int hp, int speed) {
+		model = new EnemyModel(hp, speed);
+		model.Direction = transform.up;		
 	}
 
 	private CollisionType CheckCollision() {
@@ -49,57 +41,35 @@ public class EnemyController : MonoBehaviour , IDamageable {
 						return CollisionType.enemy;
 					}
 				}				
-			}			
-			//damageable.TakeDamage(damage);
-			//OnDespawned?.Invoke(this);
+			}						
 		}
 		return CollisionType.none;
 	}
 
 	public void OnDestroy() {
-		//OnDespawned?.Invoke(this);
+		model = null;
+		view = null;
 	}
-	public void Update1() {
-		float scale = 0.5f;
-		float ampltude = 360;
-
-
-		 float minAngle = 0f; // Минимальный угол (0 градусов)
-	     float maxAngle = 360f; // Максимальный угол (360 градусов)
-
-	    var f = (Mathf.PerlinNoise(transform.localPosition.x*scale, transform.localPosition.y*scale)-0.5f) * ampltude;
-		//float Angle = Mathf.Lerp(minAngle, maxAngle, f);
-		//var r = Vector2.Lerp(Vector2.up, Vector2.down, f);
-		
+	public void ManualUpdate() {			
 
 		var direction = (playerRender.bounds.center - view.Renderer.bounds.center).normalized;		
 		Vector3 desiredDirection = (direction + CalculateAvoidance()).normalized;
-
-		//Debug.DrawRay(view.Renderer.bounds.center, CalculateAvoidance(), Color.red, 1);
-		//Debug.DrawRay(view.Renderer.bounds.center, desiredDirection, Color.blue, 1);
-		
 		
 		switch (CheckCollision()) {
-			case CollisionType.none:
-				
-				view.MoveTowards(desiredDirection, 2);
+			case CollisionType.none:				
+				view.MoveTowards(desiredDirection, model.Speed);
 				break;
-			case CollisionType.enemy:
-				
-				view.MoveTowards(desiredDirection, 2);
+			case CollisionType.enemy:				
+				view.MoveTowards(desiredDirection, model.Speed);
 				break;
-			case CollisionType.player:
-				
+			case CollisionType.player:				
 				break;
 		}
-
-		//var target= new Vector2 (0, 0 );
-
 	}
-
+	
 	Vector3 CalculateAvoidance() {
 		Vector3 avoidance = Vector3.zero;
-		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, view.Renderer.bounds.extents.y * 5f);
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, view.Renderer.bounds.extents.y * radius);
 
 		foreach (Collider2D collider in colliders) {
 			if (collider.transform != transform) {
@@ -107,11 +77,9 @@ public class EnemyController : MonoBehaviour , IDamageable {
 				avoidance += difference.normalized / difference.magnitude;
 			}
 		}
-
-		return Vector3.ClampMagnitude(avoidance, view.Renderer.bounds.extents.y * 5f);
-	}
-	private Renderer playerRender;
-	internal void SetTarget(SpriteRenderer renderer) {
-		this.playerRender= renderer;
+		return Vector3.ClampMagnitude(avoidance, view.Renderer.bounds.extents.y * radius);
+	}	
+	public void SetTarget(SpriteRenderer renderer) {
+		playerRender= renderer;
 	}
 }

@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental;
 using UnityEngine;
 using Zenject;
 
 
 public class LaserSpawner : MonoBehaviour {
-	LaserControllerPool pool;
-	public float speed;
-	public float lifetime;
-	public int damage;
-	
-	List<LaserController> items;
+	private LaserControllerPool pool;
+	[SerializeField]
+	private float speed;
+	[SerializeField]
+	private float lifetime;
+	[SerializeField]
+	private int damage;
+
+	private List<LaserController> items;
 	[Inject]
 	private void Construct(LaserControllerPool pool) {
 		this.pool = pool;
@@ -45,5 +49,6 @@ public class LaserSpawner : MonoBehaviour {
 		}
 
 	}
-	
+
+
 }

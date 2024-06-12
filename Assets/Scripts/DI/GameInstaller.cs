@@ -1,4 +1,3 @@
-using UnityEngine;
 using Utils;
 using Zenject;
 
@@ -9,11 +8,9 @@ public class GameInstaller : MonoInstaller {
 	public UIManager uI;
 	public MenuManager menu;
 	public GameManager gameManager;
+	
 	public override void InstallBindings() {
-		//SignalBusInstaller.Install(Container);
-
-		//Container.DeclareSignal<>();
-		//Container.DeclareSignal<PlayerHealthChangedSignal>();
+		
 
 		Container.Bind<PlayerController>().FromComponentInNewPrefabResource("player").AsSingle();
 		Container.Bind<InputHandler>().FromInstance(InputHandler).AsSingle();
@@ -21,8 +18,7 @@ public class GameInstaller : MonoInstaller {
 		Container.Bind<UIManager>().FromInstance(uI).AsSingle();
 		Container.Bind<MenuManager>().FromInstance(menu).AsSingle();
 		Container.Bind<EncryptedStorage>().AsSingle().WithArguments("userdata.txt", "123456789");
-		//Container.Bind<PlayerModel>().AsSingle();
-		//Container.Bind<UIController>().AsSingle().NonLazy();
+	
 		Container.Bind<EnemySpawner>().FromInstance(Spawner).AsSingle();
 		Container.Bind<LaserSpawner>().FromInstance(Laser).AsSingle();
 
@@ -39,7 +35,7 @@ public class GameInstaller : MonoInstaller {
 			.WithInitialSize(5)
 			.FromComponentInNewPrefabResource("explo2a_0")
 			.UnderTransformGroup("vfx");
-		//Container.BindInterfacesTo<EnemyController>().FromComponentInNewPrefabResource("Alien_mk1").AsTransient();
+		
 
 	}
 }

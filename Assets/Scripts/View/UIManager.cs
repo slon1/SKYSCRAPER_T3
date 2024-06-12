@@ -1,22 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using Utils;
 using Zenject;
 
 public class UIManager : MonoBehaviour
 {
-	
-	public GameObject mainMenu;
-	public GameObject gameplayUI;
-	public GameObject Loader;
+	[SerializeField]
+	private GameObject mainMenu;
+	[SerializeField]
+	private GameObject gameplayUI;
+	[SerializeField]
+	private GameObject Loader;	
 	public GameObject Spin;
-	public Text Score;
-	public Text ScoreTop;
-	public Text HP;
+	[SerializeField]
+	private Text Score;
+	[SerializeField]
+	private Text ScoreTop;
+	[SerializeField]
+	private Text HP;
 	private EncryptedStorage storage;
 	private MenuManager menuManager;
 	public int TopScore { get; set; }
@@ -26,21 +27,30 @@ public class UIManager : MonoBehaviour
 		this.storage = storage;
 
 	}
-	public void SetScore(int score) {
+
+	public void ScoreReset() {
+		Score.text = "0";
+	}
+
+	public void AddScore(int score) {
 		if (int.TryParse(Score.text, out var scoreOrg))
 		Score.text =  (scoreOrg+ score).ToString();
 		SetScoreTop(scoreOrg + score);
 	}
+
 	public void SetScoreTop(int score) {
 		if (int.TryParse(ScoreTop.text, out var scoreOrg))
 			ScoreTop.text = Mathf.Max (scoreOrg , score).ToString();
 	}
+
 	public string GetScore() {
 		return Score.text;
 	}
+
 	public void SetHP(int health) {
 		HP.text = health.ToString();
 	}
+
 	public void ShowMainMenu() {
 		mainMenu.SetActive(true);
 		gameplayUI.SetActive(false);
@@ -55,7 +65,7 @@ public class UIManager : MonoBehaviour
 
 	public void OnStartButtonClicked() {
 		menuManager.ChangeState(MenuManager.GameState.Gameplay);
-		//Score.text= storage.GetString("mydata")??"0";
+		
 	}
 
 	public void OnBackButtonClicked() {
@@ -63,11 +73,9 @@ public class UIManager : MonoBehaviour
 	}
 
 	public void OnExitButtonClicked() {
-
 		menuManager.ChangeState(MenuManager.GameState.Exit);
-		//storage.SetString("mydata",Score.text);
+		
 	}
-
 	
 }
 

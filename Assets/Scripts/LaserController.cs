@@ -14,9 +14,11 @@ public class LaserController : MonoBehaviour {
 		CheckLifetime();
 		CheckCollision();
 	}
+
 	public void SetForward(Vector2 dir) {
 		transform.up=dir;
 	}
+
 	private void Move() {
 		transform.Translate(transform.up * speed * Time.deltaTime,Space.World);
 	}
@@ -26,9 +28,9 @@ public class LaserController : MonoBehaviour {
 		if (lifetime <= 0f) {
 			OnDespawned?.Invoke(this);
 			TrailRenderer.Clear();
-		}
-		
+		}		
 	}
+
 	private void CheckCollision() {
 		var collider = Physics2D.OverlapPoint(transform.position);
 		if (collider) {
@@ -38,14 +40,12 @@ public class LaserController : MonoBehaviour {
 				OnDespawned?.Invoke(this);
 				TrailRenderer.Clear();
 			}
-		}		
-
+		}
 	}
-	public void Initialize(float speed, float lifetime, int damage) {
-		
+
+	public void Initialize(float speed, float lifetime, int damage) {		
 		this.speed = speed;
 		this.lifetime = lifetime;
 		this.damage = damage;
-
 	}
 }
