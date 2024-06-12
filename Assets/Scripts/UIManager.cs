@@ -16,8 +16,10 @@ public class UIManager : MonoBehaviour
 	public GameObject Spin;
 	public Text Score;
 	public Text ScoreTop;
+	public Text HP;
 	private EncryptedStorage storage;
 	private MenuManager menuManager;
+	public int TopScore { get; set; }
 	[Inject]
 	private void Construct(MenuManager menuManager, EncryptedStorage storage) {
 		this.menuManager = menuManager;
@@ -25,10 +27,19 @@ public class UIManager : MonoBehaviour
 
 	}
 	public void SetScore(int score) {
-		Score.text = (int.Parse(Score.text) + score).ToString(); ;
+		if (int.TryParse(Score.text, out var scoreOrg))
+		Score.text =  (scoreOrg+ score).ToString();
+		SetScoreTop(scoreOrg + score);
+	}
+	public void SetScoreTop(int score) {
+		if (int.TryParse(ScoreTop.text, out var scoreOrg))
+			ScoreTop.text = Mathf.Max (scoreOrg , score).ToString();
 	}
 	public string GetScore() {
 		return Score.text;
+	}
+	public void SetHP(int health) {
+		HP.text = health.ToString();
 	}
 	public void ShowMainMenu() {
 		mainMenu.SetActive(true);
@@ -56,7 +67,7 @@ public class UIManager : MonoBehaviour
 		menuManager.ChangeState(MenuManager.GameState.Exit);
 		//storage.SetString("mydata",Score.text);
 	}
-	
+
 	
 }
 

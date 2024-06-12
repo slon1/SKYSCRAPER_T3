@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using Utils;
 using Zenject;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    public int PlayrHP=5;
+    public event Action OnGameOver;
     private EnemySpawner spawner;
     private PlayerController player;
     private VfxPool vfx;
@@ -14,7 +20,11 @@ public class GameManager : MonoBehaviour
 	InputHandler input;
     bool run = false;
     int wave = 0;
-	int enemyCount => 10 + wave * Random.Range(2, 5);
+    CancellationTokenSource source;
+	private CancellationToken token;
+    public int levelCount=5;
+
+	int enemyCount => 10 + wave * Random.Range(2, 6);
 	[Inject]
     private void Construct(EnemySpawner spawner, PlayerController player, InputHandler inputHandler,LaserSpawner laser, VfxPool vfx, EncryptedStorage storage ) {
         this.spawner = spawner;
@@ -27,14 +37,15 @@ public class GameManager : MonoBehaviour
 	private void Awake() {
 		player.OnGameOver += Player_OnGameOver;
 		spawner.OnWaveEnd += Spawner_OnWaveEnd;
+        source = new CancellationTokenSource();
+        token = source.Token;
 	}
 	// Start is called before the first frame update
-	void Start()
-    {
+	void Start()  {
         
-
+        
 	   spawner.Spawn(enemyCount, player);
-       player.SetHealth(5);
+       player.SetHealth(PlayrHP);
 	   
         
         
@@ -61,30 +72,39 @@ public class GameManager : MonoBehaviour
 		player.OnGameOver -= Player_OnGameOver;
 		spawner.OnWaveEnd -= Spawner_OnWaveEnd;
         storage.Dispose();
+        source.Cancel();
 	}
 
-	private void Player_OnGameOver() {
-        vfx.Spawn(player.Position);
-       // Destroy(player.gameObject);
+	private async void Player_OnGameOver() {
+        run = false;
+        vfx.Spawn(player.Position);        
+        player.Visible(false);
+        try {
+            await Task.Delay(3000, token);
+        }
+        catch (Exception) { }        
+        OnGameOver?.Invoke();
+
 	}
-	private void Spawner_OnWaveEnd() {
-		print(wave + " " + enemyCount);
-		wave++;
-        print(wave+" "+ enemyCount);
-        print(FindObjectsOfType<GameManager>().Length);
+	private void Spawner_OnWaveEnd() {		
+		wave++;        
         spawner.Spawn(enemyCount,player);
+        if (wave >= levelCount) {
+            OnGameOver?.Invoke();
+        }
 	}
 	// Update is called once per frame
 	void Update()
     {
         if (!run) { return; }
 	    
-        player.Update1(input.Direction, input.MousePosition);
+        player.ManualUpdate(input.Direction, input.MousePosition);
 
         if (input.Fire) {
             player.Fire(laser.Spawn(player.Position));
         }
-        laser.Update1();
-        spawner.Update1();
+        laser.ManualUpdate();
+        spawner.ManualUpdate();
+        input.ManualUpdate();
     }
 }

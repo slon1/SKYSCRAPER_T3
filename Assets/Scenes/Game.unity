@@ -268,7 +268,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &158948701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -288,7 +288,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 100}
+  m_SizeDelta: {x: 160, y: 79}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &158948702
 MonoBehaviour:
@@ -538,10 +538,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 18
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 10
+    m_BestFit: 0
+    m_MinSize: 1
     m_MaxSize: 30
     m_Alignment: 4
     m_AlignByGeometry: 0
@@ -726,7 +726,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.12941177, g: 0.003921569, b: 0.3647059, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -843,6 +843,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87a193b2021ba6349b4bfad414768fae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayrHP: 5
+  levelCount: 3
 --- !u!114 &585645189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -889,6 +891,7 @@ MonoBehaviour:
   Spin: {fileID: 1155735571}
   Score: {fileID: 777014778}
   ScoreTop: {fileID: 1444512414}
+  HP: {fileID: 1454003627}
 --- !u!114 &585645192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1547,10 +1550,10 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
+    m_FontSize: 18
     m_FontStyle: 0
-    m_BestFit: 1
-    m_MinSize: 10
+    m_BestFit: 0
+    m_MinSize: 1
     m_MaxSize: 30
     m_Alignment: 3
     m_AlignByGeometry: 0

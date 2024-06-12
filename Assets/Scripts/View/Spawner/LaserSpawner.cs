@@ -39,7 +39,7 @@ public class LaserSpawner : MonoBehaviour {
 		items.Remove(laser);
 
 	}
-	public void Update1() {
+	public void ManualUpdate() {
 		for (int i = 0; i < items.Count; i++) {
 			items[i].Update1();
 		}

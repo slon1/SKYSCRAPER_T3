@@ -47,14 +47,12 @@ public class EnemySpawner : MonoBehaviour
 		items.Remove(ship);
 		vfx.Spawn(ship.Position).Play();
 		ui.SetScore(1);
-		if (items.Count == 0) {
-			print(1111);
-			OnWaveEnd?.Invoke();
-			
+		if (items.Count == 0) {			
+			OnWaveEnd?.Invoke();			
 		}
 	}
 
-	public void Update1() {
+	public void ManualUpdate() {
 
         for (int i = 0; i < items.Count; i++)
         {

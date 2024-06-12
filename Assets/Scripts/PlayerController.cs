@@ -8,15 +8,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 {
 	private PlayerModel model;
-	public PlayerView view;
-
+	[SerializeField]
+	private PlayerView view;
+	UIManager uI;
 	private const int up = 90;
-	public event Action OnGameOver;	
+	public event Action OnGameOver;
+	[Inject]
+	private void Construct(UIManager uI) {
+		this.uI=uI;
+	}
 
 	void Start()
     {
 		model = new PlayerModel ();
-		model.Direction = view.transform.rotation.eulerAngles;
+		model.Direction = view.transform.rotation.eulerAngles;		
 		
 	}
 	public Vector3 Position => view.transform.position;
@@ -34,7 +39,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	//	OnDespawned?.Invoke(this);
 	//}
 	// Update is called once per frame
-	public void Update1(Vector2 target, Vector2 lookAt)    {
+	public void ManualUpdate(Vector2 target, Vector2 lookAt)    {
 		model.Direction = (lookAt - (Vector2)transform.position).normalized;
 		float angle = Mathf.Atan2(model.Direction.y, model.Direction.x) * Mathf.Rad2Deg-up;
 		
@@ -53,18 +58,22 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void TakeDamage(int damage) {
 		model.TakeDamage(damage);		
 		if (!IsAlive) {
-			OnGameOver?.Invoke();
-			//OnDespawned?.Invoke(this);
-			
+			OnGameOver?.Invoke();		
 		}
+		uI.SetHP(model.Health);
 	}
 
 	public void SetHealth(int hp) {
 		
 		model.SetHealth(hp);
+		uI.SetHP(model.Health);
 	}
 
 	internal void Reset() {
 		transform.position = Vector3.zero;
+	}
+
+	internal void Visible(bool v) {
+		view.Renderer.enabled = false;
 	}
 }
