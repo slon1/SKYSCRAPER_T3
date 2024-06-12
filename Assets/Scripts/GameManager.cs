@@ -1,22 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 using Zenject;
 
 public class GameManager : MonoBehaviour
 {
     private EnemySpawner spawner;
     private PlayerController player;
-    LaserSpawner laser;
-
+    private VfxPool vfx;
+    
+	LaserSpawner laser;
+	EncryptedStorage storage = Utils.EncryptedStorage.Instance;
 
 	InputHandler input;
 	[Inject]
-    private void Construct(EnemySpawner spawner, PlayerController player, InputHandler inputHandler,LaserSpawner laser ) {
+    private void Construct(EnemySpawner spawner, PlayerController player, InputHandler inputHandler,LaserSpawner laser, VfxPool vfx ) {
         this.spawner = spawner;
         this.player = player;
         this.input = inputHandler;
         this.laser = laser;
+        this.vfx = vfx;
     }
 
     // Start is called before the first frame update
@@ -26,18 +30,23 @@ public class GameManager : MonoBehaviour
         player.SetHealth(2);
 		player.OnGameOver += Player_OnGameOver;
 		spawner.OnWaveEnd += Spawner_OnWaveEnd;
+        storage.Initialize("save.txt","12345");
         
-    }
+        
+
+	}
 
 	
 
 	private void OnDestroy() {
 		player.OnGameOver -= Player_OnGameOver;
 		spawner.OnWaveEnd -= Spawner_OnWaveEnd;
+        storage.Dispose();
 	}
 
 	private void Player_OnGameOver() {
-		
+        vfx.Spawn(player.Position);
+       // Destroy(player.gameObject);
 	}
 	private void Spawner_OnWaveEnd() {
         spawner.Spawn(10,player);

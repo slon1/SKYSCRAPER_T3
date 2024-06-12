@@ -5,7 +5,8 @@ public class GameInstaller : MonoInstaller {
 	public EnemySpawner Spawner;
 	public LaserSpawner Laser;
 	public InputHandler InputHandler;
-
+	public UIManager uI;
+	public MenuManager menu;
 	public override void InstallBindings() {
 		//SignalBusInstaller.Install(Container);
 
@@ -14,6 +15,8 @@ public class GameInstaller : MonoInstaller {
 
 		Container.Bind<PlayerController>().FromComponentInNewPrefabResource("player").AsSingle();
 		Container.Bind<InputHandler>().FromInstance(InputHandler).AsSingle();
+		Container.Bind<UIManager>().FromInstance(uI).AsSingle();
+		Container.Bind<MenuManager>().FromInstance(menu).AsSingle();
 		//Container.Bind<PlayerModel>().AsSingle();
 		//Container.Bind<UIController>().AsSingle().NonLazy();
 		Container.Bind<EnemySpawner>().FromInstance(Spawner).AsSingle();
@@ -28,6 +31,10 @@ public class GameInstaller : MonoInstaller {
 			.FromComponentInNewPrefabResource("shot")
 			.UnderTransformGroup("Lasers");
 
+		Container.BindMemoryPool<Vfx, VfxPool>()
+			.WithInitialSize(5)
+			.FromComponentInNewPrefabResource("explo2a_0")
+			.UnderTransformGroup("vfx");
 		//Container.BindInterfacesTo<EnemyController>().FromComponentInNewPrefabResource("Alien_mk1").AsTransient();
 
 	}

@@ -8,6 +8,7 @@ public class LaserController : MonoBehaviour {
 	private float lifetime;
 	private int damage;
 	public event Action<LaserController> OnDespawned;
+	public TrailRenderer TrailRenderer;
 	public void Update1() {
 		Move();
 		CheckLifetime();
@@ -23,7 +24,8 @@ public class LaserController : MonoBehaviour {
 	private void CheckLifetime() {
 		lifetime -= Time.deltaTime;
 		if (lifetime <= 0f) {
-			OnDespawned?.Invoke(this);			
+			OnDespawned?.Invoke(this);
+			TrailRenderer.Clear();
 		}
 		
 	}
@@ -34,6 +36,7 @@ public class LaserController : MonoBehaviour {
 			if (damageable!=null && damageable is EnemyController) {
 				damageable.TakeDamage(damage);
 				OnDespawned?.Invoke(this);
+				TrailRenderer.Clear();
 			}
 		}		
 

@@ -2,16 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class PlayerController : MonoBehaviour, IDamageable
 
 {
 	private PlayerModel model;
 	public PlayerView view;
-	public event Action<PlayerController> OnDespawned;
+
 	private const int up = 90;
-	public event Action OnGameOver;
-	// Start is called before the first frame update
+	public event Action OnGameOver;	
+
 	void Start()
     {
 		model = new PlayerModel ();
@@ -28,9 +29,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 
 	public bool IsAlive => model.IsAlive;
 
-	public void Destroy() {
-		OnDespawned?.Invoke(this);
-	}
+	//public void Destroy() {
+	//	OnDespawned?.Invoke(this);
+	//}
 	// Update is called once per frame
 	public void Update1(Vector2 target, Vector2 lookAt)    {
 		model.Direction = (lookAt - (Vector2)transform.position).normalized;
@@ -49,7 +50,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 	}
 
 	public void TakeDamage(int damage) {
-		model.TakeDamage(damage);
+		model.TakeDamage(damage);		
 		if (!IsAlive) {
 			OnGameOver?.Invoke();
 			//OnDespawned?.Invoke(this);
@@ -57,7 +58,8 @@ public class PlayerController : MonoBehaviour, IDamageable
 		}
 	}
 
-	internal void SetHealth(int hp) {
+	public void SetHealth(int hp) {
+		
 		model.SetHealth(hp);
 	}
 }

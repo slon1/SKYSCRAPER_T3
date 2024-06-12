@@ -11,18 +11,22 @@ public class EnemySpawner : MonoBehaviour
     private EnemyPool pool;
 	private PlayerController player;
 	public event Action OnWaveEnd;
-
+	private VfxPool vfx;
+	private UIManager ui;
 	private List<EnemyController> items;
 	[Inject]
-	private void Construct(EnemyPool pool, PlayerController player) {
+	private void Construct(EnemyPool pool, PlayerController player, VfxPool vfx, UIManager ui) {
         this.pool = pool;
         items = new();
 		this.player = player;
+		this.vfx = vfx;
+		this.ui = ui;
 	}
 
 	private void OnDestroy() {
-        pool=null;        
-        items?.Clear();
+        pool=null;
+		vfx = null;
+		items?.Clear();
 	}
     public void Spawn(int count, PlayerController player) {
         for (int i = 0; i < count; i++) {
@@ -36,6 +40,8 @@ public class EnemySpawner : MonoBehaviour
 	private void OnDespawn(EnemyController ship) {
 		ship.OnDespawned -= OnDespawn;
 		items.Remove(ship);
+		vfx.Spawn(ship.Position).Play();
+		ui.SetScore(1);
 		if (items.Count == 0) {
 			OnWaveEnd?.Invoke();
 		}

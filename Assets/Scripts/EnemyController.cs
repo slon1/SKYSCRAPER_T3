@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour , IDamageable {
 	public Vector2 target;
 	
 	public int Health => model.Health;
-
+	public Vector3 Position=>transform.position;
 	public float Speed => model.Speed;
 
 	public Vector2 Direction { get => model.Direction; set => model.Direction = value; }
@@ -42,6 +42,7 @@ public class EnemyController : MonoBehaviour , IDamageable {
 				if (damageable != null) { 
 					if (damageable is PlayerController) {
 						damageable.TakeDamage(1);
+						TakeDamage(1);
 						return CollisionType.player;
 					}
 					if (damageable is EnemyController) {
@@ -55,8 +56,8 @@ public class EnemyController : MonoBehaviour , IDamageable {
 		return CollisionType.none;
 	}
 
-	public void Destroy() {
-		OnDespawned?.Invoke(this);
+	public void OnDestroy() {
+		//OnDespawned?.Invoke(this);
 	}
 	public void Update1() {
 		float scale = 0.5f;
@@ -88,7 +89,7 @@ public class EnemyController : MonoBehaviour , IDamageable {
 				view.MoveTowards(desiredDirection, 2);
 				break;
 			case CollisionType.player:
-				TakeDamage(1);
+				
 				break;
 		}
 
