@@ -15,16 +15,7 @@ namespace Utils {
 			key = MD5.Create().ComputeHash(Encoding.Unicode.GetBytes(encryptionKey));
 			await Load();
 		}
-		//public string XorString(string input) {
-		//	byte[] inputBytes = Encoding.Unicode.GetBytes(input);
-		//	byte[] keyBytes = Encoding.Unicode.GetBytes(key);
-		//	byte[] resultBytes = new byte[inputBytes.Length];
-
-		//	for (int i = 0; i < inputBytes.Length; i++) {
-		//		resultBytes[i] = (byte)(inputBytes[i] ^ keyBytes[i % keyBytes.Length]);
-		//	}
-		//	return Encoding.Unicode.GetString(resultBytes);
-		//}
+		
 		byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key) {
 			byte[] encrypted;
 			byte[] IV;

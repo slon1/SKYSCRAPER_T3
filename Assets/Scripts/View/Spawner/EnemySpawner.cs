@@ -22,7 +22,12 @@ public class EnemySpawner : MonoBehaviour
 		this.vfx = vfx;
 		this.ui = ui;
 	}
-
+	public void Clear() {
+		items.ForEach(x => pool.Despawn(x));
+		items.Clear();
+		pool.Clear();		
+		
+	}
 	private void OnDestroy() {
         pool=null;
 		vfx = null;
@@ -43,11 +48,13 @@ public class EnemySpawner : MonoBehaviour
 		vfx.Spawn(ship.Position).Play();
 		ui.SetScore(1);
 		if (items.Count == 0) {
+			print(1111);
 			OnWaveEnd?.Invoke();
+			
 		}
 	}
 
-	private void Update() {
+	public void Update1() {
 
         for (int i = 0; i < items.Count; i++)
         {

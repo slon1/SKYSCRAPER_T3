@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
 		model = new PlayerModel ();
 		model.Direction = view.transform.rotation.eulerAngles;
+		
 	}
 	public Vector3 Position => view.transform.position;
 	
@@ -61,5 +62,9 @@ public class PlayerController : MonoBehaviour, IDamageable
 	public void SetHealth(int hp) {
 		
 		model.SetHealth(hp);
+	}
+
+	internal void Reset() {
+		transform.position = Vector3.zero;
 	}
 }

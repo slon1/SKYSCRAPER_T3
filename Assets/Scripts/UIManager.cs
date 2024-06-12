@@ -15,11 +15,14 @@ public class UIManager : MonoBehaviour
 	public GameObject Loader;
 	public GameObject Spin;
 	public Text Score;
-	EncryptedStorage storage = EncryptedStorage.Instance;
+	public Text ScoreTop;
+	private EncryptedStorage storage;
 	private MenuManager menuManager;
 	[Inject]
-	private void Construct(MenuManager menuManager) {
+	private void Construct(MenuManager menuManager, EncryptedStorage storage) {
 		this.menuManager = menuManager;
+		this.storage = storage;
+
 	}
 	public void SetScore(int score) {
 		Score.text = (int.Parse(Score.text) + score).ToString(); ;

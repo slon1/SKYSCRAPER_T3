@@ -6,33 +6,36 @@ using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Vfx : MonoBehaviour
-{
-    private int timeout = 2333;
-    private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-    private CancellationToken token;
-    public Animator animator;
+public class Vfx : MonoBehaviour {
+	private int timeout = 2333;
+	private CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+	private CancellationToken token;
+	public Animator animator;
 
-    public Action<Vfx> OnDespawned;
-	
+	public Action<Vfx> OnDespawned;
+
 	private void OnDestroy() {
-        animator = null;   
-        cancellationTokenSource.Cancel();
-        
+		animator = null;
+		cancellationTokenSource.Cancel();
+		OnDespawned?.Invoke(this);
+
 	}
-    public async void Play() {
-        token = cancellationTokenSource.Token;
+	public async void Play() {
+		token = cancellationTokenSource.Token;
 
 		animator.SetTrigger("Play");
-        try {
-            await Task.Delay(timeout, token);           
-        }
-        catch (Exception) {
-			OnDespawned?.Invoke(this);
+		try {
+			await Task.Delay(timeout, token);
+		}
+		catch (Exception) {
 			return;
-        }
-		OnDespawned?.Invoke(this);
+		}
+		finally {
+			OnDespawned?.Invoke(this);
+		}
+
+
 	}
-    
-	
+
+
 }

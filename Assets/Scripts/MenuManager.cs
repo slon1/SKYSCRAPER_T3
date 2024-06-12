@@ -9,13 +9,16 @@ using Zenject.SpaceFighter;
 
 public class MenuManager : MonoBehaviour {
 	public enum GameState { Loading, MainMenu, Gameplay, Exit }
-	private GameState currentState;
-	EncryptedStorage storage = Utils.EncryptedStorage.Instance;
+	private GameState currentState;	
 	private UIManager uiManager;
-	[Inject]
-	private void Construct(UIManager uiManager) {
-		this.uiManager = uiManager;
+	EncryptedStorage storage;
+	GameManager gameManager;
 
+	[Inject]
+	private void Construct(UIManager uiManager, EncryptedStorage storage, GameManager gameManager ) {
+		this.uiManager = uiManager;
+		this.storage = storage;
+		this.gameManager = gameManager;
 	}
 
 
@@ -31,11 +34,12 @@ public class MenuManager : MonoBehaviour {
 				break;
 			case GameState.MainMenu:
 				uiManager.ShowMainMenu();
+				gameManager.Stop();
 				break;
 			case GameState.Gameplay:
 				uiManager.HideMainMenu();
 				Load();
-				StartGame();
+				gameManager.Restart();
 				//saveSystem.LoadGame();
 				break;
 			case GameState.Exit:
@@ -46,9 +50,7 @@ public class MenuManager : MonoBehaviour {
 	}
 
 
-	private async void StartGame() {
-
-	}
+	
 	public void Save() {
 		storage.SetInt("mydata", int.Parse(uiManager.GetScore()));
 	}

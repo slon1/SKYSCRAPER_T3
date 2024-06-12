@@ -21,7 +21,10 @@ public class LaserSpawner : MonoBehaviour {
 		pool = null;
 		items?.Clear();
 	}
-
+	public void Clear() {
+		items?.Clear();
+		pool?.Clear();
+	}
 	public LaserController Spawn(Vector3 position) {
 		var laser = pool.Spawn(Vector3.zero);
 		laser.Initialize(speed, lifetime, damage);

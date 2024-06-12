@@ -9,34 +9,53 @@ public class GameManager : MonoBehaviour
     private EnemySpawner spawner;
     private PlayerController player;
     private VfxPool vfx;
-    
+    EncryptedStorage storage;
 	LaserSpawner laser;
-	EncryptedStorage storage = Utils.EncryptedStorage.Instance;
-
 	InputHandler input;
+    bool run = false;
+    int wave = 0;
+	int enemyCount => 10 + wave * Random.Range(2, 5);
 	[Inject]
-    private void Construct(EnemySpawner spawner, PlayerController player, InputHandler inputHandler,LaserSpawner laser, VfxPool vfx ) {
+    private void Construct(EnemySpawner spawner, PlayerController player, InputHandler inputHandler,LaserSpawner laser, VfxPool vfx, EncryptedStorage storage ) {
         this.spawner = spawner;
         this.player = player;
         this.input = inputHandler;
         this.laser = laser;
         this.vfx = vfx;
+        this.storage = storage;
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-       spawner.Spawn(13, player);
-        player.SetHealth(2);
+	private void Awake() {
 		player.OnGameOver += Player_OnGameOver;
 		spawner.OnWaveEnd += Spawner_OnWaveEnd;
-        storage.Initialize("save.txt","12345");
+	}
+	// Start is called before the first frame update
+	void Start()
+    {
+        
+
+	   spawner.Spawn(enemyCount, player);
+       player.SetHealth(5);
+	   
         
         
 
 	}
 
-	
+	public void Run() {
+        run = true;
+    }
+	public void Stop() {
+		run = false;
+	}
+	public void Restart() {
+        spawner.Clear();
+        laser.Clear();
+        run = true;
+        player.Reset();
+        Start();
+
+	}
+
 
 	private void OnDestroy() {
 		player.OnGameOver -= Player_OnGameOver;
@@ -49,19 +68,23 @@ public class GameManager : MonoBehaviour
        // Destroy(player.gameObject);
 	}
 	private void Spawner_OnWaveEnd() {
-        spawner.Spawn(10,player);
+		print(wave + " " + enemyCount);
+		wave++;
+        print(wave+" "+ enemyCount);
+        print(FindObjectsOfType<GameManager>().Length);
+        spawner.Spawn(enemyCount,player);
 	}
 	// Update is called once per frame
 	void Update()
     {
-       // if (!input.Idle )
-        {
-			player.Update1(input.Direction, input.MousePosition);
+        if (!run) { return; }
+	    
+        player.Update1(input.Direction, input.MousePosition);
 
-		}
         if (input.Fire) {
             player.Fire(laser.Spawn(player.Position));
         }
         laser.Update1();
+        spawner.Update1();
     }
 }

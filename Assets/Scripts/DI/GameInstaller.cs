@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils;
 using Zenject;
 
 public class GameInstaller : MonoInstaller {
@@ -7,6 +8,7 @@ public class GameInstaller : MonoInstaller {
 	public InputHandler InputHandler;
 	public UIManager uI;
 	public MenuManager menu;
+	public GameManager gameManager;
 	public override void InstallBindings() {
 		//SignalBusInstaller.Install(Container);
 
@@ -15,8 +17,10 @@ public class GameInstaller : MonoInstaller {
 
 		Container.Bind<PlayerController>().FromComponentInNewPrefabResource("player").AsSingle();
 		Container.Bind<InputHandler>().FromInstance(InputHandler).AsSingle();
+		Container.Bind<GameManager>().FromInstance(gameManager).AsSingle();
 		Container.Bind<UIManager>().FromInstance(uI).AsSingle();
 		Container.Bind<MenuManager>().FromInstance(menu).AsSingle();
+		Container.Bind<EncryptedStorage>().AsSingle().WithArguments("userdata.txt", "123456789");
 		//Container.Bind<PlayerModel>().AsSingle();
 		//Container.Bind<UIController>().AsSingle().NonLazy();
 		Container.Bind<EnemySpawner>().FromInstance(Spawner).AsSingle();

@@ -18,4 +18,6 @@ public class PlayerView : ShipView
 	public void RotateTowards(Vector3 target) {
 		transform.rotation = Quaternion.Euler(target);
 	}
+
+	
 }

@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using System.IO;
 
 namespace Utils {
-	public class EncryptedStorage : EncryptedFile {
-		private static readonly Lazy<EncryptedStorage> instance = new Lazy<EncryptedStorage>(() => new EncryptedStorage());
-		public static EncryptedStorage Instance => instance.Value;
+	public class EncryptedStorage : EncryptedFile {		
 
 		private Dictionary<string, string> storage;
 
-		private EncryptedStorage() {
+		private EncryptedStorage(string filename, string encryptionKey) {
 			storage = new Dictionary<string, string>();
+			Initialize(filename, encryptionKey);
 		}
 
 		protected override async Task Load() {
