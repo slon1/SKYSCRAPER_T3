@@ -831,6 +831,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db6f7a40473fa3d4abea87ad6b6e862e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  configs:
+  - {fileID: 11400000, guid: 596fa9ff592dbd1488198d19f1078e0e, type: 2}
+  - {fileID: 11400000, guid: 066e37962bf1c224b838507554a1d2cd, type: 2}
+  - {fileID: 11400000, guid: e7dd69b9bdc14b34d951854eea8a308e, type: 2}
   EnemyHP: 2
   EnemySpeed: 3
   spawnRadius: 15

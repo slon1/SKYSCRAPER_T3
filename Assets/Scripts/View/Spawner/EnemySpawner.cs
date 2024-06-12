@@ -10,7 +10,8 @@ using Random = UnityEngine.Random;
 public class EnemySpawner : MonoBehaviour{
     
 	public event Action OnWaveEnd;
-	
+	[SerializeField]
+	private List<EnemyConfig> configs;
 	[SerializeField]
 	private int EnemyHP;
 	[SerializeField]
@@ -42,8 +43,8 @@ public class EnemySpawner : MonoBehaviour{
 
     public void Spawn(int count, PlayerController player) {
         for (int i = 0; i < count; i++) {
-            EnemyController enemy = pool.Spawn(Random.insideUnitCircle * spawnRadius);
-			enemy.Init(EnemyHP, EnemySpeed);
+            EnemyController enemy = pool.Spawn(Random.insideUnitCircle * spawnRadius, configs[Random.Range(0,configs.Count)]);
+			//enemy.Init(EnemyHP, EnemySpeed);
 			items.Add(enemy);
             enemy.OnDespawned += OnDespawn;
 			enemy.SetTarget(player.Renderer);

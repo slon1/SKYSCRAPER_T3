@@ -20,10 +20,11 @@ public class EnemyController : MonoBehaviour , IDamageable {
 		}
 	}
 	
-	public void Init(int hp, int speed) {
-		model = new EnemyModel(hp, speed);
-		model.Direction = transform.up;		
-	}
+	//public void Init(EnemyConfig config) {
+	//	model = new EnemyModel(config.health, config.speed);
+	//	model.Direction = transform.up;
+	//	view.Renderer.sprite = config.sprite;
+	//}
 
 	private CollisionType CheckCollision() {
 		
@@ -81,5 +82,12 @@ public class EnemyController : MonoBehaviour , IDamageable {
 	}	
 	public void SetTarget(SpriteRenderer renderer) {
 		playerRender= renderer;
+	}
+
+	internal void SetConfig(EnemyConfig config) {
+		model = new EnemyModel(config.health, config.speed);
+		model.Direction = transform.up;
+		view.Renderer.sprite = config.sprite;
+		
 	}
 }

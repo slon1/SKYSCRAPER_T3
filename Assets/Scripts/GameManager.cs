@@ -84,6 +84,7 @@ public class GameManager : MonoBehaviour {
 	}
 	private void Spawner_OnWaveEnd() {
 		wave++;
+		print(enemyCount);
 		spawner.Spawn(enemyCount, player);
 		if (wave >= levelCount) {
 			OnGameOver?.Invoke();

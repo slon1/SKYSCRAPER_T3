@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Zenject;
 
-public class EnemyPool : MonoMemoryPool<Vector3, EnemyController>
+public class EnemyPool : MonoMemoryPool<Vector3, EnemyConfig , EnemyController>
 {
 	protected override void OnCreated(EnemyController item) {
 		base.OnCreated(item);
@@ -15,9 +16,10 @@ public class EnemyPool : MonoMemoryPool<Vector3, EnemyController>
 	
 	}
 	
-	protected override void Reinitialize(Vector3 spawnPosition, EnemyController item) {
-		base.Reinitialize( spawnPosition, item);
+	protected override void Reinitialize(Vector3 spawnPosition, EnemyConfig config, EnemyController item) {
+		base.Reinitialize( spawnPosition, config, item);
 		item.transform.position= spawnPosition;
+		item.SetConfig(config);
 		item.OnDespawned += Item_OnDespawned;
 
 	}
