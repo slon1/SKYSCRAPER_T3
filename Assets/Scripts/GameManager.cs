@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour {
 		token = source.Token;
 
 	}
-	// Start is called before the first frame update
+
 	public void StartGame() {
 
 		wave = 0;
@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour {
 			OnGameOver?.Invoke();
 		}
 	}
-	// Update is called once per frame
+	
 	void Update() {
 		if (!run) { return; }
 

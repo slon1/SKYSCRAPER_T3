@@ -11,12 +11,7 @@ public class EnemySpawner : MonoBehaviour{
     
 	public event Action OnWaveEnd;
 	[SerializeField]
-	private List<EnemyConfig> configs;
-	[SerializeField]
-	private int EnemyHP;
-	[SerializeField]
-	private int EnemySpeed;
-	[SerializeField]
+	private List<EnemyConfig> configs;	
 	private float spawnRadius = 15;
 
 	private VfxPool vfx;
@@ -43,8 +38,7 @@ public class EnemySpawner : MonoBehaviour{
 
     public void Spawn(int count, PlayerController player) {
         for (int i = 0; i < count; i++) {
-            EnemyController enemy = pool.Spawn(Random.insideUnitCircle * spawnRadius, configs[Random.Range(0,configs.Count)]);
-			//enemy.Init(EnemyHP, EnemySpeed);
+            EnemyController enemy = pool.Spawn(Random.insideUnitCircle * spawnRadius, configs[Random.Range(0,configs.Count)]);			
 			items.Add(enemy);
             enemy.OnDespawned += OnDespawn;
 			enemy.SetTarget(player.Renderer);
